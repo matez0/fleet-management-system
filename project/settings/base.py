@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -26,3 +27,7 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+# Messaging:
+FMS_RMQ_EXCHANGE = os.getenv('FMS_RMQ_EXCHANGE', 'fms')
+FMS_RMQ_URL = os.getenv('FMS_RMQ_URL', 'amqp://guest:guest@localhost:5672')
