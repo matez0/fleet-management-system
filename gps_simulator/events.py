@@ -1,13 +1,12 @@
 from time import sleep
 
 from if_fms_gs import ROUTING_KEY_START_TRIP, StartTripMessage
-from if_gs_vms import GpsMessage, ROUTING_KEY_GPS
+from if_gs_vms import GpsMessage, ROUTING_KEY_GPS, TIME_DIFF, ACC
 from messaging import Callback, send_message, start_consumer
 from .models import TripState
 from .trip import iter_motion
 
-TIME_DIFF = 3
-ACC = 10
+logger = logging.getLogger('django')
 
 
 def emit_gps_events():
