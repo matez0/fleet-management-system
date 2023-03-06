@@ -1,7 +1,11 @@
+import logging
+
 from if_fms_gs import StartTripMessage, ROUTING_KEY_START_TRIP
 from if_vms_fms import PenaltyMessage, ROUTING_KEY_PENALTY
 from messaging import Callback, send_message, start_consumer
 from .models import Driver, DriverToVehicle, VehicleToTrip
+
+logger = logging.getLogger('django')
 
 
 def start_trip_if_assigned(driver_id, vehicle_id):
@@ -44,6 +48,8 @@ def start_consuming_penalty_events():
 
 @Callback(PenaltyMessage)
 def add_penalty_points(penalty: PenaltyMessage, header):
+    logger.info('Incoming message; message=%s', penalty)
+
     driver = Driver.objects.get(id=penalty.driverId)
     driver.points += penalty.points
     driver.save()

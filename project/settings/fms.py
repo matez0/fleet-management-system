@@ -71,3 +71,14 @@ AUTH_PASSWORD_VALIDATORS = [
 # Static files (CSS, JavaScript, Images)
 
 STATIC_URL = '/static/'
+
+DATABASES = {
+   "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "fms",
+        "USER": "postgres",
+        "PASSWORD": "postgres",
+        "HOST": "db",
+        "PORT": 5432,
+    }
+}

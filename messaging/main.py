@@ -10,7 +10,7 @@ from retry import retry
 
 from .callback_decorator import Callback as CallbackBase
 
-logger = logging.getLogger('messaging')
+logger = logging.getLogger('django')
 
 
 class Callback(CallbackBase):
