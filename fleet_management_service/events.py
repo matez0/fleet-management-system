@@ -1,6 +1,7 @@
 from if_fms_gs import StartTripMessage, ROUTING_KEY_START_TRIP
-from messaging import send_message
-from .models import DriverToVehicle, VehicleToTrip
+from if_vms_fms import PenaltyMessage, ROUTING_KEY_PENALTY
+from messaging import Callback, send_message, start_consumer
+from .models import Driver, DriverToVehicle, VehicleToTrip
 
 
 def start_trip_if_assigned(driver_id, vehicle_id):
@@ -35,3 +36,14 @@ def start_trip_if_driver_assigned(vehicle_id, trip_id):
     trip = VehicleToTrip.objects.get(vehicle=vehicle_id).trip
 
     _start_trip(driver_id, vehicle_id, trip)
+
+
+def start_consuming_penalty_events():
+    start_consumer(ROUTING_KEY_PENALTY, add_penalty_points)
+
+
+@Callback(PenaltyMessage)
+def add_penalty_points(penalty: PenaltyMessage, header):
+    driver = Driver.objects.get(id=penalty.driverId)
+    driver.points += penalty.points
+    driver.save()
