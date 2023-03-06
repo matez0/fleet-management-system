@@ -1,3 +1,4 @@
+import logging
 from time import sleep
 
 from if_fms_gs import ROUTING_KEY_START_TRIP, StartTripMessage
@@ -42,6 +43,8 @@ def start_consuming_start_trip_events():
 
 @Callback(StartTripMessage)
 def start_trip(message: StartTripMessage, header):
+    logger.info('Incoming message; message=%s', message)
+
     TripState(
         driverId=message.driverId,
         vehicleId=message.vehicleId,
