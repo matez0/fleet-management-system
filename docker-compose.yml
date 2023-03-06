@@ -1,11 +1,65 @@
 version: "3.3"
 
 services:
+  db:
+    image: postgres:13
+    container_name: db
+    environment:
+      POSTGRES_DB: fms
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - 5432:5432
+    networks:
+      - fms_net
+
   rabbitmq:
     image: rabbitmq:3.10-management
     ports:
       - "15672:15672"
       - "5672:5672"
+    networks:
+      - fms_net
+
+  vms:
+    image: vms
+    build:
+      context: .
+      dockerfile: Dockerfile.vms
+    environment:
+      FMS_RMQ_URL: amqp://guest:guest@rabbitmq:5672
+    depends_on:
+      - rabbitmq
+      - gs
+    networks:
+      - fms_net
+
+  gs:
+    image: gs
+    build:
+      context: .
+      dockerfile: Dockerfile.gs
+    environment:
+      FMS_RMQ_URL: amqp://guest:guest@rabbitmq:5672
+    depends_on:
+      - db
+      - rabbitmq
+      - fms
+    networks:
+      - fms_net
+
+  fms:
+    image: fms
+    build:
+      context: .
+      dockerfile: Dockerfile.fms
+    environment:
+      FMS_RMQ_URL: amqp://guest:guest@rabbitmq:5672
+    ports:
+      - "8888:8888"
+    depends_on:
+      - db
+      - rabbitmq
     networks:
       - fms_net
 
